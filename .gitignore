@@ -15,4 +15,4 @@ data/*.csv
 data/*.zip
 # OS
 .DS_Store
-Thumbs.db
+Thumbs.db*.pkg
