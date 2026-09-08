@@ -16,3 +16,4 @@ data/*.zip
 # OS
 .DS_Store
 Thumbs.db*.pkg
+.idea/
