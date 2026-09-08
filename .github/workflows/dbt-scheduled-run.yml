@@ -1,0 +1,29 @@
+name: Scheduled dbt build
+
+on:
+  schedule:
+    - cron: "0 5 * * *"
+  workflow_dispatch:
+
+jobs:
+  dbt-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t retail-sales-dw:${{ github.sha }} .
+      - name: Run dbt build
+        env:
+          SNOWFLAKE_ACCOUNT:   ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_USER:      ${{ secrets.SNOWFLAKE_USER }}
+          SNOWFLAKE_PASSWORD:  ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_ROLE:      ${{ secrets.SNOWFLAKE_ROLE }}
+          SNOWFLAKE_WAREHOUSE: COMPUTE_WH
+          SNOWFLAKE_DATABASE:  RETAIL_SALES_DB
+          SNOWFLAKE_SCHEMA:    RETAIL_SALES
+        run: |
+          docker run --rm \
+            -e SNOWFLAKE_ACCOUNT -e SNOWFLAKE_USER -e SNOWFLAKE_PASSWORD \
+            -e SNOWFLAKE_ROLE -e SNOWFLAKE_WAREHOUSE \
+            -e SNOWFLAKE_DATABASE -e SNOWFLAKE_SCHEMA \
+            retail-sales-dw:${{ github.sha }} build
