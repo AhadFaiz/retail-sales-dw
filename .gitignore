@@ -7,6 +7,7 @@ target/
 dbt_packages/
 logs/
 profiles.yml
+!profiles.yml
 # secrets & environment
 .env
 *.pem
@@ -15,5 +16,6 @@ data/*.csv
 data/*.zip
 # OS
 .DS_Store
-Thumbs.db*.pkg
+Thumbs.db
+*.pkg
 .idea/
