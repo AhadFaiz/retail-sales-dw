@@ -1,0 +1,13 @@
+retail_sales_project:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: <your_account_identifier>
+      user: <your_username>
+      password: <your_password>
+      role: <your_role>
+      warehouse: RETAIL_WH
+      database: RETAIL_SALES_DB
+      schema: RETAIL_SALES
+      threads: 4
