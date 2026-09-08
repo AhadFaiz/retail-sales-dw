@@ -1,0 +1,27 @@
+name: 'retail_sales_project'
+version: '1.0.0'
+
+profile: 'retail_sales_project'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+snapshots:
+  +schema: SNPT
+
+models:
+  retail_sales_project:
+    staging:
+      +schema: STG
+      +materialized: view
+    marts:
+      +schema: PROD
+      +materialized: incremental

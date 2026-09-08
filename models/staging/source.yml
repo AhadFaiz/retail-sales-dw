@@ -1,0 +1,29 @@
+version: 2
+
+sources:
+  - name: raw_data_source
+    description: "Raw source tables for AdventureWorks sales data"
+    database: RETAIL_SALES_DB
+    schema: RETAIL_SALES_RAW
+
+    tables:
+      - name: RAW_SALESORDERHEADER
+        description: "Raw Sales Order Header data containing order-level information"
+      - name: RAW_SALESORDERDETAIL
+        description: "Raw Sales Order Detail data containing product-level sales details"
+      - name: RAW_PRODUCT
+        description: "Raw Product data including product attributes and pricing"
+      - name: RAW_PRODUCTCATEGORY
+        description: "Raw Product Category data defining category hierarchies"
+      - name: RAW_PRODUCTSUBCATEGORY
+        description: "Raw Product Subcategory data nested under product categories"
+      - name: RAW_CUSTOMER
+        description: "Raw Customer data containing customer identifiers and business details"
+      - name: RAW_PERSON
+        description: "Raw Person data including names and personal identifiers"
+      - name: RAW_ADDRESS
+        description: "Raw Address data including street, city, and postal code information"
+      - name: RAW_STATEPROVINCE
+        description: "Raw State/Province lookup data"
+      - name: RAW_COUNTRYREGION
+        description: "Raw Country/Region lookup data"

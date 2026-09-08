@@ -1,0 +1,156 @@
+version: 2
+
+models:
+
+  # ===============================================
+  # Dim Customer Model
+  # ===============================================
+  - name: dim_customer
+    description: "Intermediate dim_customer table with surrogate key and validated business key"
+    columns:
+      - name: customer_id
+        description: "Customer business key from source"
+        tests:
+          - unique       # Ensure no duplicate customer IDs
+          - not_null     # Ensure all customer IDs are populated
+      - name: account_number
+        description: "Account number for customer"
+      - name: person_id
+        description: "Reference to person entity"
+      - name: store_id
+        description: "Store ID if applicable"
+      - name: territory_id
+        description: "Sales territory reference"
+      - name: modified_date
+        description: "Last modified date of customer record"
+
+  # ===============================================
+  # Dim Address Model
+  # ===============================================
+  - name: dim_location
+    description: "Intermediate dim_location table with validated address key"
+    columns:
+      - name: address_id
+        description: "Primary key for addresses"
+        tests:
+          - unique       # Ensure each address has a unique ID
+          - not_null     # Ensure address ID exists
+      - name: address_line_1
+        description: "First line of address"
+      - name: address_line_2
+        description: "Second line of address (if any)"
+      - name: city
+        description: "City name"
+      - name: state_province_id
+        description: "Reference to state/province"
+      - name: postal_code
+        description: "Postal code / ZIP"
+      - name: spatial_location
+        description: "Spatial data if available"
+      - name: modified_date
+        description: "Last modified date of address record"
+
+  # ===============================================
+  # Dim Product Model
+  # ===============================================
+  - name: dim_product
+    description: "Intermediate product dimension combining raw product, subcategory, and category"
+    columns:
+      - name: product_id
+        description: "Business key for product"
+        tests:
+          - unique
+          - not_null
+      - name: product_subcategory_id
+        description: "FK to product subcategory"
+      - name: product_model_id
+        description: "Reference to product model"
+
+# ===============================================
+  # Fact Sales Order Model
+  # ===============================================
+  - name: fct_sales_per_order_line
+    description: "Transactional-level fact table capturing sales order and line item details with a 7-day incremental merge window for late-arriving or updated records."
+    columns:
+      - name: sales_order_detail_id
+        description: "Unique identifier for each sales order line item; serves as the fact table's primary grain."
+        tests:
+          - unique
+          - not_null
+
+      - name: sales_order_id
+        description: "Unique identifier for the parent sales order associated with this line item."
+
+      - name: customer_id
+        description: "Foreign key referencing the customer who placed the order."
+
+      - name: sales_person_id
+        description: "Salesperson responsible for the transaction, if applicable."
+
+      - name: territory_id
+        description: "Sales territory associated with the order."
+
+      - name: product_id
+        description: "Foreign key referencing the product sold in this line item."
+
+      - name: order_qty
+        description: "Quantity of product units ordered for this line item."
+
+      - name: unit_price_usd
+        description: "Unit price of the product at the time of sale (pre-discount)."
+
+      - name: unit_price_discount_usd
+        description: "Discount percentage applied to the product unit price."
+
+      - name: line_total_usd
+        description: "Total amount for this order line after discount and before tax or freight."
+
+      - name: sub_total_usd
+        description: "Subtotal of all line items in the order header, excluding tax and freight."
+
+      - name: tax_amount_usd
+        description: "Total tax amount applicable to the order."
+
+      - name: freight_charge_usd
+        description: "Freight or shipping charges applied to the order."
+
+      - name: total_due_usd
+        description: "Total amount due for the order including subtotal, tax, and freight."
+
+      - name: order_status
+        description: "Status code representing the current stage of the order (e.g., In Progress, Shipped, Cancelled)."
+
+      - name: order_date
+        description: "Date the order was created or recorded in the system."
+
+      - name: due_date
+        description: "Date by which the order is expected to be fulfilled or delivered."
+
+      - name: ship_date
+        description: "Actual date when the order was shipped."
+
+# ===============================================
+  # Reporting table: Monthly Sales Model
+  # ===============================================
+  - name: rep_monthly_sales
+    description: "Aggregated monthly-level sales metrics derived from fct_sales_per_order for trend and performance analysis."
+    columns:
+      - name: month_start_date
+        description: "Start date of the month; serves as the unique aggregation key."
+        tests:
+          - not_null
+          - unique
+      - name: sales_year
+        description: "Calendar year of the aggregated month."
+      - name: sales_month
+        description: "Calendar month (MM format) of the aggregated period."
+      - name: total_sales_usd
+        description: "Total sales revenue (in USD) for the month."
+      - name: total_orders
+        description: "Count of unique sales orders placed during the month."
+      - name: total_quantity_sold
+        description: "Total number of items sold during the month."
+      - name: total_tax_usd
+        description: "Sum of tax amounts applied to sales for the month."
+      - name: total_freight_usd
+        description: "Total freight or shipping charges incurred during the month."

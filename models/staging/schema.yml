@@ -1,0 +1,123 @@
+version: 2
+
+models:
+
+  # ===========================================================
+  # Address Data
+  # ===========================================================
+  - name: stg_address
+    description: "Cleans and standardizes address data from RAW_ADDRESS."
+    columns:
+      - name: address_id
+        description: "Primary key for each address record."
+        tests:
+          - unique
+          - not_null
+
+  # ===========================================================
+  # Country/Region Data
+  # ===========================================================
+  - name: stg_countryRegion
+    description: "Standardized country and region data."
+    columns:
+      - name: country_region_code
+        description: "Primary key for each country or region."
+        tests:
+          - unique
+          - not_null
+
+  # ===========================================================
+  # Customer Data
+  # ===========================================================
+  - name: stg_customer
+    description: "Staged customer data cleaned from RAW_CUSTOMER."
+    columns:
+      - name: customer_id
+        description: "Primary key for each customer record."
+        tests:
+          - unique
+          - not_null
+
+  # ===========================================================
+  # Person Data
+  # ===========================================================
+  - name: stg_person
+    description: "Filtered and standardized person data (from snapshot)."
+    columns:
+      - name: business_entity_id
+        description: "Primary key representing each person entity."
+        tests:
+          - unique
+          - not_null
+
+  # ===========================================================
+  # Product Data
+  # ===========================================================
+  - name: stg_product
+    description: "Staged product data prepared for dimension modeling."
+    columns:
+      - name: product_id
+        description: "Primary key for product records."
+        tests:
+          - unique
+          - not_null
+
+  # ===========================================================
+  # State/Province Data
+  # ===========================================================
+  - name: stg_stateProvince
+    description: "Standardized state or province data linked to country regions."
+    columns:
+      - name: state_province_id
+        description: "Primary key for each state or province."
+        tests:
+          - unique
+          - not_null
+
+  # ===========================================================
+  # Sales Order Header Data
+  # ===========================================================
+  - name: stg_salesOrderHeader
+    description: "Cleans and stages order header data for fact tables."
+    columns:
+      - name: sales_order_id
+        description: "Primary key for each sales order header."
+        tests:
+          - unique
+          - not_null
+
+  # ===========================================================
+  # Sales Order Detail Data
+  # ===========================================================
+  - name: stg_salesOrderDetail
+    description: "Staged sales order detail data for line-level transaction records."
+    columns:
+      - name: sales_order_detail_id
+        description: "Primary key for each sales order detail (line) record."
+        tests:
+          - unique
+          - not_null
+
+  # ===========================================================
+  # Product Category Data
+  # ===========================================================
+  - name: stg_productCategory
+    description: "Staged product category data used to group subcategories."
+    columns:
+      - name: product_category_id
+        description: "Primary key for each product category."
+        tests:
+          - unique
+          - not_null
+
+  # ===========================================================
+  # Product Subcategory Data
+  # ===========================================================
+  - name: stg_productSubCategory
+    description: "Staged product subcategory data linked to product categories."
+    columns:
+      - name: product_subcategory_id
+        description: "Primary key for each product subcategory."
+        tests:
+          - unique
+          - not_null
